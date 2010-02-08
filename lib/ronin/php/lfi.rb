@@ -25,10 +25,3 @@ require 'ronin/php/lfi/target'
 require 'ronin/php/lfi/file'
 require 'ronin/php/lfi/lfi'
 require 'ronin/php/lfi/scanner'
-require 'ronin/database'
-
-module Ronin
-  Database.upgrade do
-    require 'ronin/exploits/lfi'
-  end
-end
