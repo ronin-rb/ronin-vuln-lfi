@@ -18,23 +18,6 @@
 # along with ronin-vuln-lfi.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-require 'ronin/php/lfi/signature'
-
-module Ronin
-  module PHP
-    class LFI
-      Signature.test do |sig|
-        sig.paths['Linux'] = ['/etc/group']
-        sig.paths['Solaris'] = ['/etc/group']
-
-        sig.recognizor = /root:/
-      end
-
-      Signature.test do |sig|
-        sig.paths['Windows'] = ['/boot.ini']
-
-        sig.recognizor = /\[boot loader\]/
-      end
-    end
-  end
-end
+require 'ronin/vuln/lfi/signatures/tests'
+require 'ronin/vuln/lfi/signatures/configs'
+require 'ronin/vuln/lfi/signatures/logs'

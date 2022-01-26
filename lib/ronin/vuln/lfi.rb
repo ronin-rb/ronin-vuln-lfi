@@ -18,4 +18,8 @@
 # along with ronin-vuln-lfi.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-require 'ronin/php/lfi/extensions/uri'
+require 'ronin/vuln/lfi/exceptions'
+require 'ronin/vuln/lfi/extensions'
+require 'ronin/vuln/lfi/signatures'
+require 'ronin/vuln/lfi/file'
+require 'ronin/vuln/lfi/lfi'

@@ -18,4 +18,4 @@
 # along with ronin-vuln-lfi.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-require 'ronin/php/lfi/exceptions/unknown_signature'
+require 'ronin/vuln/lfi/exceptions/unknown_signature'

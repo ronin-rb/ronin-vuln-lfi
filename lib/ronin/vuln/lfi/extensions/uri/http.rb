@@ -18,16 +18,16 @@
 # along with ronin-vuln-lfi.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-require 'ronin/php/lfi/lfi'
+require 'ronin/vuln/lfi/lfi'
 
 module URI
   class HTTP < Generic
 
     #
-    # @see Ronin::PHP::LFI.scan
+    # @see Ronin::Vuln::LFI.scan
     #
     def lfi_scan(options={})
-      Ronin::PHP::LFI.scan(self,options)
+      Ronin::Vuln::LFI.scan(self,options)
     end
 
     #
@@ -39,11 +39,11 @@ module URI
     # @option options [Range] :up
     #   The number of directories to attempt traversing up.
     #
-    # @return [Ronin::PHP::LFI]
+    # @return [Ronin::Vuln::LFI]
     #   The first LFI vulnerability found.
     #
     def first_lfi(options={})
-      Ronin::PHP::LFI.scan(self,options).first
+      Ronin::Vuln::LFI.scan(self,options).first
     end
 
     #

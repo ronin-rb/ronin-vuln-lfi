@@ -18,10 +18,10 @@
 # along with ronin-vuln-lfi.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-require 'ronin/php/lfi/exceptions/unknown_signature'
-require 'ronin/php/lfi/signature'
-require 'ronin/php/lfi/signatures'
-require 'ronin/php/lfi/file'
+require 'ronin/vuln/lfi/exceptions/unknown_signature'
+require 'ronin/vuln/lfi/signature'
+require 'ronin/vuln/lfi/signatures'
+require 'ronin/vuln/lfi/file'
 require 'ronin/network/http'
 require 'ronin/web/spider'
 require 'ronin/path'
@@ -29,7 +29,7 @@ require 'ronin/path'
 require 'uri/query_params'
 
 module Ronin
-  module PHP
+  module Vuln
     class LFI
 
       # Maximum number of directories to escape
@@ -122,7 +122,7 @@ module Ronin
         up = (options[:up] || (0..MAX_UP))
 
         url.query_params.each_key do |param|
-          lfi = Ronin::PHP::LFI.new(url,param)
+          lfi = Ronin::Vuln::LFI.new(url,param)
 
           up.each do |n|
             lfi.up = n

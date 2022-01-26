@@ -19,7 +19,7 @@
 #
 
 module Ronin
-  module PHP
+  module Vuln
     class LFI
       class UnknownSignature < RuntimeError
       end

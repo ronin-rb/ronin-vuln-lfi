@@ -18,10 +18,10 @@
 # along with ronin-vuln-lfi.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-require 'ronin/php/lfi/signature'
+require 'ronin/vuln/lfi/signature'
 
 module Ronin
-  module PHP
+  module Vuln
     class LFI
       Signature.config do |sig|
         sig.paths['Linux'] = ['/etc/passwd']
