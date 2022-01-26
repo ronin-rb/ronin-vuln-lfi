@@ -1,0 +1,26 @@
+name: ronin-vuln-lfi
+summary: Test for Local File Inclusion (LFI) vulnerabilities.
+description: |
+  ronin-vuln-lfi is a small Ruby library to test for Local File Inclusion (LFI)
+  vulnerabilities.
+
+license: LGPL-3.0
+authors: Postmodern
+email: postmodern.mod3@gmail.com
+homepage: https://ronin-rb.dev/
+has_yard: true
+
+metadata:
+  documentation_uri: https://rubydoc.info/gems/ronin-vuln-lfi
+  source_code_uri:   https://github.com/ronin-rb/ronin-vuln-lfi
+  bug_tracker_uri:   https://github.com/ronin-rb/ronin-vuln-lfi/issues
+  changelog_uri:     https://github.com/ronin-rb/ronin-vuln-lfi/blob/master/ChangeLog.md
+
+required_ruby_version: ">= 2.7.0"
+
+dependencies:
+  # Ronin dependencies:
+  ronin-support: ~> 1.0
+
+development_dependencies:
+  bundler: ~> 2.0
