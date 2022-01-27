@@ -106,14 +106,14 @@ module Ronin
       #
       # @since 0.2.0
       #
-      def LFI.scan(url, up: 0..MAX_UP, **kwargs)
+      def self.scan(url, up: 0..MAX_UP, **kwargs)
         return enum_for(:scan,url,**kwargs) unless block_given?
 
         url = URI(url)
         up = (options[:up] || (0..MAX_UP))
 
         url.query_params.each_key do |param|
-          lfi = Ronin::Vuln::LFI.new(url,param)
+          lfi = new(url,param)
 
           up.each do |n|
             lfi.up = n
