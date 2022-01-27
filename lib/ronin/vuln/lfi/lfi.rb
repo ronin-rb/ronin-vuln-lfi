@@ -123,6 +123,38 @@ module Ronin
       end
 
       #
+      # Tests all query parameters in the URL for Local File Inclusion (LFI)
+      # vulnerabilities.
+      #
+      # @param [Hash{Symbol => Object}] kwargs
+      #   Additional keyword arguments for {test}.
+      #
+      # @yield [lfi]
+      #   If a block is given, it will be passed each newly discovered LFI
+      #   vulnerability.
+      #
+      # @yieldparam [LFI] lfi
+      #   A newly discoverd LFI vulnerability in one of the URL's query
+      #   parameters.
+      #
+      # @return [Array<LFI>]
+      #   All discovered LFI vulnerabilities.
+      #
+      def self.test_all_params(url, **kwargs)
+        url   = URI(url)
+        vulns = []
+
+        url.query_params.each_key do |param|
+          if (lfi = test(url, param: param, **kwargs)
+            yield lfi if block_given?
+            vulns << lfi
+          end
+        end
+
+        return vulns
+      end
+
+      #
       # @return [Boolean]
       #   Specifies whether the LFI path will be terminated with a null
       #   byte.
