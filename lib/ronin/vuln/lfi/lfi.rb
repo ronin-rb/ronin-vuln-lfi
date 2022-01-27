@@ -21,7 +21,6 @@
 require 'ronin/vuln/lfi/exceptions/unknown_signature'
 require 'ronin/vuln/lfi/signature'
 require 'ronin/vuln/lfi/signatures'
-require 'ronin/vuln/lfi/file'
 require 'ronin/network/http'
 require 'ronin/web/spider'
 require 'ronin/path'
@@ -193,13 +192,13 @@ module Ronin
       #
       # Requests the contents of a local file.
       #
-      # @return [File]
-      #   A File object representing the local file.
+      # @return [String]
+      #   The HTTP response from the LFI request.
       #
       # @see get
       #
       def include(path,options={})
-        File.new(path,get(path,options))
+        get(path,options)
       end
 
       #
