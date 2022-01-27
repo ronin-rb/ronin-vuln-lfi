@@ -89,6 +89,10 @@ module Ronin
       # @param [URI::HTTP, String] url
       #   The URL to scan.
       #
+      # @param [String, Symbol,] param
+      #   Optional query parameter to specifically test.
+      #   Defaults to testing every URL query parameter.
+      #
       # @param [Hash{Symbol => Object}] kwargs
       #   Additional keyword arguments.
       #
@@ -100,11 +104,15 @@ module Ronin
       #
       # @since 0.2.0
       #
-      def self.test(url, up: 0..MAX_UP, **kwargs)
+      def self.test(url, param: nil, up: 0..MAX_UP, **kwargs)
         url = URI(url)
         up = (options[:up] || (0..MAX_UP))
 
-        url.query_params.each_key do |param|
+        params = if param then [param.to_s]
+                 else          url.query_params.keys
+                 end
+
+        params.each do |param|
           lfi = new(url,param)
 
           up.each do |n|
