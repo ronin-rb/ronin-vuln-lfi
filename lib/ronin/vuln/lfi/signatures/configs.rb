@@ -25,35 +25,30 @@ module Ronin
     class LFI
       Signature.config do |sig|
         sig.paths['Linux'] = ['/etc/passwd']
-        sig.paths['Solaris'] = ['/etc/passwd']
 
         sig.recognizor = /root:/
       end
 
       Signature.config do |sig|
         sig.paths['Linux'] = ['/etc/group']
-        sig.paths['Solaris'] = ['/etc/group']
 
         sig.recognizor = /root:/
       end
 
       Signature.config do |sig|
         sig.paths['Linux'] = ['/etc/fstab']
-        sig.paths['Solaris'] = ['/etc/vfstab']
 
         sig.recognizor = /\/?proc\s+(-\s+)?\/proc\s+proc/
       end
 
       Signature.config do |sig|
         sig.paths['Linux'] = ['/etc/mtab']
-        sig.paths['Solaris'] = ['/etc/mnttab']
 
         sig.recognizor = /proc\s+\/proc\s+proc/
       end
 
       Signature.config do |sig|
         sig.paths['Linux'] = ['/etc/apache/apache.conf', '/etc/apache2/apache.conf']
-        sig.paths['Solaris'] = ['/etc/apache/apache.conf', '/etc/apache2/apache.conf']
 
         sig.recognizor = /ServerRoot/
 
@@ -81,7 +76,6 @@ module Ronin
 
       Signature.config do |sig|
         sig.paths['Linux'] = ['/etc/lighttpd/lighttpd.conf']
-        sig.paths['Solaris'] = ['/etc/lighttpd/lighttpd.conf']
 
         sig.recognizor = /server\.modules/
 

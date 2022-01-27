@@ -25,7 +25,6 @@ module Ronin
     class LFI
       Signature.test do |sig|
         sig.paths['Linux'] = ['/etc/group']
-        sig.paths['Solaris'] = ['/etc/group']
 
         sig.recognizor = /root:/
       end

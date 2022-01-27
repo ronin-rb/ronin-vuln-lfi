@@ -25,7 +25,6 @@ module Ronin
     class LFI
       Signature.log do |sig|
         sig.paths['Linux'] = ['/var/log/wtmp']
-        sig.paths['Solaris'] = ['/var/log/wtmp']
 
         sig.recognizor = /(tty\d+|:\d+)/
       end
@@ -38,7 +37,6 @@ module Ronin
 
       Signature.log do |sig|
         sig.paths['Linux'] = ['/etc/syslog.conf']
-        sig.paths['Solaris'] = ['/etc/syslog.conf']
 
         sig.recognizor = /kern\.(\*|emerg|alert|crit|err|warn(ing)?|notice|info|debug)/
       end
