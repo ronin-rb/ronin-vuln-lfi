@@ -61,34 +61,26 @@ module Ronin
       # @param [String, Symbol] param
       #   The query parameter to perform LFI on.
       #
-      # @param [Hash] options
-      #
-      # @option options [String] :prefix
+      # @param [String, nil] prefix
       #   Optional prefix for any Local File Inclusion path.
       #
-      # @option options [Integer] :up (0)
+      # @param [Integer] up
       #   Number of directories to escape up.
       #
-      # @option options [Boolean] :terminate (true)
+      # @param [Boolean] terminate
       #   Specifies whether to terminate the LFI path with a null byte.
       #
-      # @option options [String] :os
+      # @param [String, nil] os
       #   Operating System to specifically target.
       #
-      def initialize(url,param,options={})
-        @url = url
+      def initialize(url,param, prefix: nil, up: 0, terminate: true, os: nil)
+        @url   = url
         @param = param
 
-        @prefix = options[:prefix]
-        @up = (options[:up] || 0)
-
-        if options.has_key?(:terminate)
-          @terminate = options[:terminate]
-        else
-          @terminate = true
-        end
-
-        @os = options[:os]
+        @prefix    = prefix
+        @up        = up
+        @terminate = terminate
+        @os        = os
       end
 
       #
@@ -97,10 +89,10 @@ module Ronin
       # @param [URI::HTTP, String] url
       #   The URL to scan.
       #
-      # @param [Hash] options
-      #   Additional options.
+      # @param [Hash{Symbol => Object}] kwargs
+      #   Additional keyword arguments.
       #
-      # @option options [Range] :up
+      # @option options [Range<Integer>] :up
       #   The number of directories to attempt traversing up.
       #
       # @yield [lfi]
@@ -114,8 +106,8 @@ module Ronin
       #
       # @since 0.2.0
       #
-      def LFI.scan(url,options={})
-        return enum_for(:scan,url,options) unless block_given?
+      def LFI.scan(url, up: 0..MAX_UP, **kwargs)
+        return enum_for(:scan,url,**kwargs) unless block_given?
 
         url = URI(url)
         up = (options[:up] || (0..MAX_UP))
@@ -126,7 +118,7 @@ module Ronin
           up.each do |n|
             lfi.up = n
 
-            if lfi.vulnerable?(options)
+            if lfi.vulnerable?(options,**kwargs)
               yield lfi
               break
             end
@@ -169,12 +161,12 @@ module Ronin
       # @param [String] path
       #   The path of the local file to request.
       # 
-      # @param [Hash] options
-      #   Additional HTTP options to use when requesting the local file.
-      #
-      # @option options [Symbol] :method (:get)
+      # @param [:get, :post] method
       #   The HTTP method to request the local file. May be either
       #   `:get` or `:post`.
+      #
+      # @param [Hash{Symbol => Object}] kwargs
+      #   Additional keyword arguments.
       #
       # @return [String]
       #   The body of the response.
@@ -182,9 +174,8 @@ module Ronin
       # @see Net.http_request
       # @see Net.http_post_body
       #
-      def get(path,options={})
-        options  = options.merge(:url => url_for(path))
-        response = Net.http_request(options)
+      def get(path,**kwargs)
+        response = Net.http_request(url: url_for(path), **kwargs)
 
         return response.body
       end
@@ -192,21 +183,27 @@ module Ronin
       #
       # Requests the contents of a local file.
       #
+      # @param [Hash{Symbol => Object}] kwargs
+      #   Additional keyword arguments.
+      #
       # @return [String]
       #   The HTTP response from the LFI request.
       #
       # @see get
       #
-      def include(path,options={})
-        get(path,options)
+      def include(path,**kwargs)
+        get(path,**kwargs)
       end
 
+      #
+      # @param [Hash{Symbol => Object}] kwargs
+      #   Additional keyword arguments.
       #
       # @return [Boolean]
       #   Specifies whether the URL and query parameter are vulnerable
       #   to LFI.
       #
-      def vulnerable?(options={})
+      def vulnerable?(**kwargs)
         Signature.tests.each do |sig|
           inclusion_of(sig) do |file|
             return true
