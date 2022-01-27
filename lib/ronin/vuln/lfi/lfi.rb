@@ -180,17 +180,14 @@ module Ronin
       # @return [String]
       #   The body of the response.
       #
-      # @see Net.http_get_body
+      # @see Net.http_request
       # @see Net.http_post_body
       #
       def get(path,options={})
-        options = options.merge(:url => url_for(path))
+        options  = options.merge(:url => url_for(path))
+        response = Net.http_request(options)
 
-        if options[:method] == :post
-          return Net.http_post_body(options)
-        else
-          return Net.http_get_body(options)
-        end
+        return response.body
       end
 
       #
