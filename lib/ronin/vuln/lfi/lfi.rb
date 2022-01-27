@@ -106,7 +106,7 @@ module Ronin
       #
       # @since 0.2.0
       #
-      def self.scan(url, up: 0..MAX_UP, **kwargs)
+      def self.test(url, up: 0..MAX_UP, **kwargs)
         return enum_for(:scan,url,**kwargs) unless block_given?
 
         url = URI(url)
