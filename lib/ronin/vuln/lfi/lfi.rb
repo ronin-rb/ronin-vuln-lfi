@@ -44,7 +44,7 @@ module Ronin
       attr_accessor :prefix
 
       # Number of directories to traverse up
-      attr_accessor :up
+      attr_accessor :escape_up
 
       # Whether to terminate the LFI path with a null byte
       attr_accessor :terminate
@@ -64,7 +64,7 @@ module Ronin
       # @param [String, nil] prefix
       #   Optional prefix for any Local File Inclusion path.
       #
-      # @param [Integer] up
+      # @param [Integer] escape_up
       #   Number of directories to escape up.
       #
       # @param [Boolean] terminate
@@ -73,12 +73,15 @@ module Ronin
       # @param [String, nil] os
       #   Operating System to specifically target.
       #
-      def initialize(url,param, prefix: nil, up: 0, terminate: true, os: nil)
+      def initialize(url,param, prefix: nil,
+                                escape_up: 0,
+                                terminate: true,
+                                os: nil)
         @url   = url
         @param = param
 
         @prefix    = prefix
-        @up        = up
+        @escape_up = escape_up
         @terminate = terminate
         @os        = os
       end
@@ -93,7 +96,7 @@ module Ronin
       #   Optional query parameter to specifically test.
       #   Defaults to testing every URL query parameter.
       #
-      # @param [Range<Integer>] up
+      # @param [Range<Integer>] escape_up
       #   The number of directories to attempt traversing up.
       #
       # @param [Hash{Symbol => Object}] kwargs
@@ -104,7 +107,7 @@ module Ronin
       #
       # @since 0.2.0
       #
-      def self.test(url, param: nil, up: 0..MAX_UP, **kwargs)
+      def self.test(url, param: nil, escape_up: 0..MAX_UP, **kwargs)
         url = URI(url)
 
         params = if param then [param.to_s]
@@ -114,8 +117,8 @@ module Ronin
         params.each do |param|
           lfi = new(url,param)
 
-          up.each do |n|
-            lfi.up = n
+          escape_up.each do |n|
+            lfi.escape_up = n
 
             if lfi.vulnerable?(options,**kwargs)
               return lfi
