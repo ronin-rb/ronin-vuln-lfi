@@ -203,89 +203,6 @@ module Ronin
       end
 
       #
-      # Include a local file commonly known by a given name.
-      #
-      # @param [String] name
-      #   The common name of the local file to request.
-      #
-      # @param [Hash] options
-      #   Additional inclusion options.
-      #
-      # @raise [UnknownSignature]
-      #   Unable to load signature information for the file.
-      #
-      # @see inclusion_of
-      #
-      def include_target(name,options={},&block)
-        name = name.to_s
-        target = Signature.with_file(name)
-
-        unless target
-          raise(UnknownSignature,"unknown file signature #{name.dump}")
-        end
-
-        return inclusion_of(target,options,&block)
-      end
-
-      #
-      # Saves a local file commonly known by a given name.
-      #
-      # @param [String] name
-      #   The common name of the local file to save.
-      #
-      # @param [String] dest
-      #   The destination path to save the local file to.
-      #
-      # @param [Hash] options
-      #   Additional inclusion options.
-      #
-      # @see include_target
-      # @see inclusion_of
-      #
-      def save_target(name,dest,options={})
-        include_target(name,options) do |file|
-          file.save(dest)
-        end
-      end
-
-      #
-      # Includes all targeted config and log files.
-      #
-      # @param [Hash] options
-      #   Additional inclusion options.
-      #
-      # @return [Array<File>]
-      #   The successfully included local files.
-      #
-      # @see inclusion_of
-      #
-      def include_targets(options={},&block)
-        (Signature.configs + Signature.logs).map { |target|
-          inclusion_of(target,options,&block)
-        }.compact
-      end
-
-      #
-      # Mirrors all known config and log files.
-      #
-      # @param [String] directory
-      #   The directory to mirror all local files to.
-      #
-      # @param [Hash] options
-      #   Additional inclusion options.
-      #
-      # @return [Array<String>]
-      #   The desintation paths of the mirrored local files.
-      #
-      # @see include_known
-      #
-      def mirror_known(directory,options={})
-        include_known(options).map do |file|
-          file.mirror(directory)
-        end
-      end
-
-      #
       # @return [Boolean]
       #   Specifies whether the URL and query parameter are vulnerable
       #   to LFI.
@@ -298,30 +215,6 @@ module Ronin
         end
 
         return false
-      end
-
-      #
-      # Extracts information from all known files.
-      #
-      # @param [Hash] options
-      #   Additional inclusion options.
-      #
-      # @option options [Array] :oses
-      #   A list of OSes to test for.
-      #
-      # @return [Hash]
-      #   The gathered information.
-      #
-      def fingerprint(options={})
-        data = {}
-
-        Signature.with_extractors.each do |sig|
-          inclusion_of(sig,options) do |file|
-            data.merge!(sig.extract_from(file.contents))
-          end
-        end
-
-        return data
       end
 
       #
@@ -349,40 +242,6 @@ module Ronin
         else
           return sig.all_paths
         end
-      end
-
-      #
-      # Returns the File object obtained via a given file signature.
-      #
-      # @param [Signature] sig
-      #   The file signature for a known file.
-      #
-      # @param [Hash] options
-      #   Additional inclusion options.
-      #
-      # @yield [file]
-      #   If a block is given it will be passed the successfully
-      #   included local file.
-      #
-      # @yieldparam [File] file
-      #   The File representing the included local file.
-      #
-      # @return [File]
-      #   The file representing the successfully included local file.
-      #
-      def inclusion_of(sig,options={},&block)
-        paths_of(sig).each do |path|
-          body = get(path,options)
-
-          if sig.included_in?(body)
-            file = File.new(path,body)
-
-            block.call(file) if block
-            return file
-          end
-        end
-
-        return nil
       end
 
     end
