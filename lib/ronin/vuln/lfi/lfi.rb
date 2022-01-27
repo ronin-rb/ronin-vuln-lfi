@@ -31,9 +31,6 @@ module Ronin
   module Vuln
     class LFI
 
-      # Maximum number of directories to escape
-      MAX_UP = 15
-
       # The URL which is vulnerable
       attr_reader :url
 
@@ -96,7 +93,7 @@ module Ronin
       #   Optional query parameter to specifically test.
       #   Defaults to testing every URL query parameter.
       #
-      # @param [Range<Integer>] escape_up
+      # @param [Integer] escape_up
       #   The number of directories to attempt traversing up.
       #
       # @param [Hash{Symbol => Object}] kwargs
@@ -107,7 +104,7 @@ module Ronin
       #
       # @since 0.2.0
       #
-      def self.test(url, param: nil, escape_up: 0..MAX_UP, **kwargs)
+      def self.test(url, param: nil, escape_up: 4, **kwargs)
         url = URI(url)
 
         params = if param then [param.to_s]
@@ -115,14 +112,10 @@ module Ronin
                  end
 
         params.each do |param|
-          lfi = new(url,param)
+          lfi = new(url,param, escaped_up: escape_up)
 
-          escape_up.each do |n|
-            lfi.escape_up = n
-
-            if lfi.vulnerable?(options,**kwargs)
-              return lfi
-            end
+          if lfi.vulnerable?(options,**kwargs)
+            return lfi
           end
         end
       end
