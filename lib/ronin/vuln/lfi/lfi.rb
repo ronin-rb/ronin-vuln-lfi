@@ -143,7 +143,7 @@ module Ronin
       #   The URL for the Local File Inclusion.
       #
       def url_for(path)
-        escape = (@prefix || Path.up(@up))
+        escape    = (@prefix || Path.up(@up))
         full_path = escape.join(path.to_s)
         full_path = "#{full_path}\0" if terminate?
 
