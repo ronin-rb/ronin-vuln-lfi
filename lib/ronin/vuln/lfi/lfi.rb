@@ -118,7 +118,7 @@ module Ronin
       def LFI.scan(url,options={})
         return enum_for(:scan,url,options) unless block_given?
 
-        url = URI(url.to_s) unless url.kind_of?(URI)
+        url = URI(url)
         up = (options[:up] || (0..MAX_UP))
 
         url.query_params.each_key do |param|
@@ -158,7 +158,7 @@ module Ronin
         full_path = escape.join(path.to_s)
         full_path = "#{full_path}\0" if terminate?
 
-        new_url = URI(@url.to_s)
+        new_url = URI(@url)
         new_url.query_params[@param.to_s] = full_path
 
         return new_url
