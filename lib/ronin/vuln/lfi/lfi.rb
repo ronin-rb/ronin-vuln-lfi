@@ -93,11 +93,11 @@ module Ronin
       #   Optional query parameter to specifically test.
       #   Defaults to testing every URL query parameter.
       #
+      # @param [Range<Integer>] up
+      #   The number of directories to attempt traversing up.
+      #
       # @param [Hash{Symbol => Object}] kwargs
       #   Additional keyword arguments.
-      #
-      # @option options [Range<Integer>] :up
-      #   The number of directories to attempt traversing up.
       #
       # @return [LFI, nil]
       #   The discovered LFI vulnerability or `nil`.
@@ -106,7 +106,6 @@ module Ronin
       #
       def self.test(url, param: nil, up: 0..MAX_UP, **kwargs)
         url = URI(url)
-        up = (options[:up] || (0..MAX_UP))
 
         params = if param then [param.to_s]
                  else          url.query_params.keys
