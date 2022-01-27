@@ -71,7 +71,7 @@ module Ronin
       #   Operating System to specifically target.
       #
       def initialize(url,param, prefix: nil,
-                                escape_up: 0,
+                                escape_up: 4,
                                 terminate: true,
                                 os: nil)
         @url   = url
