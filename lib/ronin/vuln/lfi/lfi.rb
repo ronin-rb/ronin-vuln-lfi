@@ -95,20 +95,12 @@ module Ronin
       # @option options [Range<Integer>] :up
       #   The number of directories to attempt traversing up.
       #
-      # @yield [lfi]
-      #   The given block will be passed each discovered LFI vulnerability.
-      #
-      # @yieldparam [LFI] lfi
-      #   A discovered LFI vulnerability.
-      #
-      # @return [Enumerator]
-      #   If no block is given, an enumerator object will be returned.
+      # @return [LFI, nil]
+      #   The discovered LFI vulnerability or `nil`.
       #
       # @since 0.2.0
       #
       def self.test(url, up: 0..MAX_UP, **kwargs)
-        return enum_for(:scan,url,**kwargs) unless block_given?
-
         url = URI(url)
         up = (options[:up] || (0..MAX_UP))
 
@@ -119,8 +111,7 @@ module Ronin
             lfi.up = n
 
             if lfi.vulnerable?(options,**kwargs)
-              yield lfi
-              break
+              return lfi
             end
           end
         end
