@@ -89,7 +89,7 @@ module Ronin
       # @param [URI::HTTP, String] url
       #   The URL to scan.
       #
-      # @param [String, Symbol,] param
+      # @param [String, Symbol, nil] param
       #   Optional query parameter to specifically test.
       #   Defaults to testing every URL query parameter.
       #
