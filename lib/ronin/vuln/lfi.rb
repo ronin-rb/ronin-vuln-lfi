@@ -71,7 +71,7 @@ module Ronin
       # @param [Boolean] terminate
       #   Specifies whether to terminate the LFI path with a null byte.
       #
-      # @param [String, nil] os
+      # @param [:unix, :windows, nil] os
       #   Operating System to specifically target.
       #
       # @param [Net::HTTP, #get, nil] http
