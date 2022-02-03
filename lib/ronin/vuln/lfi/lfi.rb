@@ -163,6 +163,22 @@ module Ronin
       end
 
       #
+      # Builds a `../../..` escaped path for the given file path.
+      #
+      # @param [String] path
+      #   The path to escape.
+      #
+      # @return [String]
+      #   The `../../../` escaped path.
+      #
+      def escaped_path_for(path)
+        escaped_path = (@prefix || (Array.new(@escape_up,'..')).join('/'))
+        escaped_path = "#{full_path}\0" if terminate?
+
+        return escaped_path
+      end
+
+      #
       # Builds a Local File Inclusion URL which includes a local path.
       #
       # @param [String] path
@@ -172,12 +188,8 @@ module Ronin
       #   The URL for the Local File Inclusion.
       #
       def url_for(path)
-        escape    = (@prefix || Path.up(@escape_up))
-        full_path = escape.join(path.to_s)
-        full_path = "#{full_path}\0" if terminate?
-
         new_url = URI(@url)
-        new_url.query_params[@param.to_s] = full_path
+        new_url.query_params[@param.to_s] = escaped_path_for(path)
 
         return new_url
       end
