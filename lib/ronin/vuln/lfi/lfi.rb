@@ -22,7 +22,6 @@ require 'ronin/vuln/lfi/exceptions/unknown_signature'
 require 'ronin/vuln/lfi/signature'
 require 'ronin/vuln/lfi/signatures'
 require 'ronin/network/http'
-require 'ronin/web/spider'
 require 'ronin/path'
 
 require 'uri/query_params'
