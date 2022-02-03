@@ -200,7 +200,7 @@ module Ronin
       #   The `../../../` escaped path.
       #
       def escaped_path_for(path)
-        escaped_path = [@escape_prefix, path].join(@separator)
+        escaped_path = "#{@escape_prefix}#{path}"
         escaped_path = "#{escape_path}\0" if terminate?
 
         return escaped_path
