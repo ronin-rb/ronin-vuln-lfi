@@ -107,7 +107,7 @@ module Ronin
         @terminate = terminate
         @os        = os
 
-        @escape_prefix = @prefix || Array.new(@escape_up,'..').join(@separator)
+        @escape_prefix = @prefix || ("..#{@separator}" * @escape_up)
       end
 
       #
