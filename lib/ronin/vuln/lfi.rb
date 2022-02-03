@@ -91,12 +91,12 @@ module Ronin
       # @param [Net::HTTP, #get, nil] http
       #   An HTTP session to use for testing the LFI.
       #
-      def initialize(url,param, prefix: nil,
+      def initialize(url,param, prefix:    nil,
                                 escape_up: 4,
                                 separator: '/',
                                 terminate: true,
-                                os: nil,
-                                http: nil)
+                                os:        nil,
+                                http:      nil)
         @url   = url
         @param = param
         @http  = http
