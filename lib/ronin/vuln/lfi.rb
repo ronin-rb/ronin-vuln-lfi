@@ -33,22 +33,22 @@ module Ronin
       attr_reader :url
 
       # The vulnerable query param
-      attr_accessor :param
+      attr_reader :param
 
       # The path prefix
-      attr_accessor :prefix
+      attr_reader :prefix
 
       # Number of directories to traverse up
-      attr_accessor :escape_up
+      attr_reader :escape_up
 
       # The escape prefix to add to every LFI path
-      attr_accessor :escape_prefix
+      attr_reader :escape_prefix
 
       # Whether to terminate the LFI path with a null byte
-      attr_accessor :terminate
+      attr_reader :terminate
 
       # Targeted Operating System (OS)
-      attr_accessor :os
+      attr_reader :os
 
       #
       # Creates a new LFI object.
