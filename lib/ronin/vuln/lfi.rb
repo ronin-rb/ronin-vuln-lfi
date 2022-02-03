@@ -68,12 +68,17 @@ module Ronin
       # @param [String, nil] os
       #   Operating System to specifically target.
       #
+      # @param [Net::HTTP, #get, nil] http
+      #   An HTTP session to use for testing the LFI.
+      #
       def initialize(url,param, prefix: nil,
                                 escape_up: 4,
                                 terminate: true,
-                                os: nil)
+                                os: nil,
+                                http: nil)
         @url   = url
         @param = param
+        @http  = http
 
         @prefix    = prefix
         @escape_up = escape_up
@@ -102,7 +107,7 @@ module Ronin
       #
       # @since 0.2.0
       #
-      def self.test(url, param: nil, escape_up: 4..17, **kwargs)
+      def self.test(url, param: nil, escape_up: 4..17, http: nil, **kwargs)
         url = URI(url)
 
         params = if param then [param.to_s]
@@ -111,7 +116,7 @@ module Ronin
 
         escape_up.each do |n|
           params.each do |param|
-            lfi = new(url,param, escaped_up: n)
+            lfi = new(url,param, escaped_up: n, http: http)
 
             if lfi.vulnerable?(options,**kwargs)
               return lfi
@@ -209,13 +214,10 @@ module Ronin
       # @return [String]
       #   The body of the response.
       #
-      # @see Net.http_request
-      # @see Net.http_post_body
-      #
       def get(path,**kwargs)
-        response = Net.http_request(url: url_for(path), **kwargs)
-
-        return response.body
+        lfi_url  = url_for(path)
+        respones = request(url,**kwargs)
+        body     = response.body
       end
 
       #
@@ -261,7 +263,24 @@ module Ronin
         @url.to_s
       end
 
-      protected
+      private
+
+      #
+      # Performas an HTTP `GET` request for the given URI.
+      #
+      # @param [URI::HTTP] url
+      #   The URL to request.
+      #
+      # @return [Net::HTTPResponse, #body]
+      #   The response object.
+      #
+      def request(url)
+        if @http
+          @http.get(url.path)
+        else
+          Net::HTTP.get_response(url)
+        end
+      end
 
       #
       # @param [Signature] sig
