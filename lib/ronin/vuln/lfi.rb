@@ -30,24 +30,38 @@ module Ronin
     class LFI
 
       # The URL which is vulnerable
+      #
+      # @return [String, URI::HTTP]
       attr_reader :url
 
       # The vulnerable query param
+      #
+      # @return [String, Symbol]
       attr_reader :param
 
       # The path prefix
+      #
+      # @return [String, nil]
       attr_reader :prefix
 
       # Number of directories to traverse up
+      #
+      # @return [Integer]
       attr_reader :escape_up
 
       # The escape prefix to add to every LFI path
+      #
+      # @return [String]
       attr_reader :escape_prefix
 
       # Whether to terminate the LFI path with a null byte
+      #
+      # @param [Boolean]
       attr_reader :terminate
 
       # Targeted Operating System (OS)
+      #
+      # @return [:unix, :windows, nil]
       attr_reader :os
 
       #
