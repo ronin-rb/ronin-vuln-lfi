@@ -41,6 +41,9 @@ module Ronin
       # Number of directories to traverse up
       attr_accessor :escape_up
 
+      # The escape prefix to add to every LFI path
+      attr_accessor :escape_prefix
+
       # Whether to terminate the LFI path with a null byte
       attr_accessor :terminate
 
@@ -62,6 +65,9 @@ module Ronin
       # @param [Integer] escape_up
       #   Number of directories to escape up.
       #
+      # @param [String] separator
+      #   The directory separator character.
+      #
       # @param [Boolean] terminate
       #   Specifies whether to terminate the LFI path with a null byte.
       #
@@ -73,6 +79,7 @@ module Ronin
       #
       def initialize(url,param, prefix: nil,
                                 escape_up: 4,
+                                separator: '/',
                                 terminate: true,
                                 os: nil,
                                 http: nil)
@@ -82,8 +89,11 @@ module Ronin
 
         @prefix    = prefix
         @escape_up = escape_up
+        @separator = separator
         @terminate = terminate
         @os        = os
+
+        @escape_prefix = @prefix || Array.new(@escape_up,'..').join(@separator)
       end
 
       #
@@ -176,8 +186,8 @@ module Ronin
       #   The `../../../` escaped path.
       #
       def escaped_path_for(path)
-        escaped_path = (@prefix || (Array.new(@escape_up,'..')).join('/'))
-        escaped_path = "#{full_path}\0" if terminate?
+        escaped_path = [@escape_prefix, path].join(@separator)
+        escaped_path = "#{escape_path}\0" if terminate?
 
         return escaped_path
       end
@@ -216,7 +226,7 @@ module Ronin
       #
       def get(path,**kwargs)
         lfi_url  = url_for(path)
-        respones = request(url,**kwargs)
+        lfi_respones = request(url,**kwargs)
         body     = response.body
       end
 
