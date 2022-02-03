@@ -188,7 +188,7 @@ module Ronin
       #   The URL for the Local File Inclusion.
       #
       def url_for(path)
-        new_url = URI(@url)
+        new_url = @url.clone
         new_url.query_params[@param.to_s] = escaped_path_for(path)
 
         return new_url
