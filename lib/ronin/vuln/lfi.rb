@@ -253,7 +253,7 @@ module Ronin
       #
       # @see get
       #
-      def include(path,**kwargs)
+      def readfile(path,**kwargs)
         @normal_body ||= request(@url,**kwargs).body
 
         lfi_url      = url_for(path)
