@@ -98,7 +98,7 @@ module Ronin
                                 os:        nil,
                                 http:      nil)
         @url   = url
-        @param = param
+        @param = param.to_s
         @http  = http
 
         @prefix    = prefix
@@ -239,9 +239,7 @@ module Ronin
       #   The body of the response.
       #
       def get(path,**kwargs)
-        lfi_url  = url_for(path)
-        lfi_respones = request(url,**kwargs)
-        body     = response.body
+        request(url_for(path)).body
       end
 
       #
@@ -256,7 +254,33 @@ module Ronin
       # @see get
       #
       def include(path,**kwargs)
-        get(path,**kwargs)
+        @normal_body ||= request(@url,**kwargs).body
+
+        lfi_url      = url_for(path)
+        lfi_respones = request(url,**kwargs)
+        lfi_body     = response.body
+
+        # Step 1: replace the injected param with the original param to make
+        # the LFI response look more like the original response.
+        lfi_body.gsub!(lfi_url.query_params[@param],@uri.query_params[@param])
+
+        normal_chars = @normal_body.chars
+        lfi_chars    = lfi_body.chars
+
+        # Step 2: find the common prefix String
+        prefix = normalchars.zip(lfi_chars).take_while { |(c1,c2)|
+          c1 == c2
+        }.map(&:first).join
+
+        # Step 3: find the common suffix String
+        suffix = normal_chars.reverse.zip(lfi_chars.reverse).take_while { |(c1,c2)|
+          c1 == c2
+        }.map(&:first).reverse.join
+
+        # Step 4: Remove the common prefix and suffix
+        lfi_body.delete_prefix!(prefix)
+        lif_body.delete_suffix!(suffix)
+        return lfi_body
       end
 
       #
